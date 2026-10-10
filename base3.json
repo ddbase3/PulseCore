@@ -1,0 +1,11 @@
+{
+    "manifestVersion": 1,
+    "name": "PulseCore",
+    "namespace": "PulseCore",
+    "version": "0.3.1",
+    "description": "PulseCore: account-based circuit puzzle with persistent progress and verified results.",
+    "license": "GPL-3.0-or-later",
+    "dependencies": {
+        "Base3Framework": ">=4.10.0"
+    }
+}
