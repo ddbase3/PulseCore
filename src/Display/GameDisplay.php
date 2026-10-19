@@ -4,6 +4,10 @@ namespace PulseCore\Display;
 
 use Base3\Api\IAssetResolver;
 use Base3\Api\IDisplay;
+use Base3\Authorization\Api\IAuthorizationService;
+use Base3\Authorization\Dto\AuthorizationRequest;
+use Base3\Usermanager\Permission;
+use PulseCore\Feature\PulseCorePlayFeature;
 use Base3\Api\IHelp;
 use Base3\Api\IMvcView;
 use Base3\Api\ISchemaProvider;
@@ -24,7 +28,8 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 		private readonly ILanguage $language,
 		private readonly ILevelRepository $levels,
 		private readonly GameSession $session,
-		private readonly ILinkTargetService $links
+		private readonly ILinkTargetService $links,
+		private readonly IAuthorizationService $authorization
 	) {}
 
 	public static function getName(): string {
@@ -48,6 +53,12 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 	public function getOutput(string $out = 'html', bool $final = false): string {
 		if ($out !== 'html') {
 			throw new InvalidArgumentException('PulseCore display supports html only.');
+		}
+		if (!$this->authorization->decide(new AuthorizationRequest(
+			$this->authorization->getDefaultAuthority(), Permission::for('feature', PulseCorePlayFeature::getName())
+		))->isAllowed()) {
+			http_response_code(403);
+			return '<p role="alert">PulseCore access denied.</p>';
 		}
 		$levels = $this->levels->getLevels();
 		if (!in_array($this->initialLevel, array_column($levels, 'id'), true)) {

@@ -2,6 +2,10 @@
 
 namespace PulseCore\Output;
 
+use Base3\Authorization\Api\IAuthorizationService;
+use Base3\Authorization\Dto\AuthorizationRequest;
+use Base3\Usermanager\Permission;
+use PulseCore\Feature\PulseCorePlayFeature;
 use Base3\Api\IHelp;
 use Base3\Api\IOutput;
 use Base3\Api\IRequest;
@@ -17,7 +21,8 @@ final class GameApiOutput implements IOutput, IHelp {
 		private readonly IRequest $request,
 		private readonly GameSession $session,
 		private readonly IGameService $game,
-		private readonly ILogger $logger
+		private readonly ILogger $logger,
+		private readonly IAuthorizationService $authorization
 	) {}
 
 	public static function getName(): string { return 'pulsecoreapi'; }
@@ -25,6 +30,9 @@ final class GameApiOutput implements IOutput, IHelp {
 	public function getOutput(string $out = 'html', bool $final = false): string {
 		$status = 200;
 		try {
+			if (!$this->authorization->decide(new AuthorizationRequest(
+				$this->authorization->getDefaultAuthority(), Permission::for('feature', PulseCorePlayFeature::getName())
+			))->isAllowed()) throw new GameException('permission_denied', 'PulseCore access denied.', 403);
 			if ($out !== 'json') throw new GameException('invalid_request', 'This endpoint supports JSON only.', 406);
 			if ($this->request->server('REQUEST_METHOD') !== 'POST') throw new GameException('invalid_request', 'Use POST for the game API.', 405);
 			if ((int) $this->request->server('CONTENT_LENGTH', 0) > 131072) throw new GameException('invalid_request', 'Request body too large.', 413);

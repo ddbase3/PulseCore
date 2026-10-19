@@ -225,3 +225,17 @@ Effekte. In der Kampagnenansicht wird das verdeckte Spielfeld nicht pro Frame
 neu gezeichnet.
 
 Pruefstand und Grenzen stehen in `docs/FINISHING-TESTS.md`.
+
+## BASE3 feature authorization (ILIAS 11 integration)
+
+`PulseCorePlayFeature` is discoverable through `IClassMap` as an `IFeature`.
+It declares `feature/pulsecoreplayfeature`; its default audience expression matches
+the BASE3 group `authenticated`. The ILIAS-hosted Features UI may override that
+with any combination of BASE3 groups, individual ILIAS users or discovered
+`IUserCriterion` expressions (for example an email-domain criterion). An explicit
+empty expression denies access. Both `pulsecoredisplay` and `pulsecoreapi` require
+`IAuthorizationService::decide()` to return `ALLOW`; server-side operations are
+protected independently of the UI. Feature rules are persisted only by the host in
+`base3_authorization_features/catalog` after the one-time migration from legacy
+`grants` to `rules`; PulseCore has no separate authorization table.
+See `PRIVACY.md` for host-specific data-processing and retention boundaries.

@@ -165,7 +165,7 @@ $obsolete = $modifiedGame->load($user, 1);
 check($obsolete['rulesChanged'] && $obsolete['run'] === null, 'Changed rules do not silently resume an old snapshot');
 rejected(fn() => $modifiedGame->checkpoint($user, $state['revision'], $state['run']['id'], [['type' => 'reset']]), 'rules_changed', 'Rule version checked on every checkpoint');
 
-$display = new GameDisplay(new TestView(), new TestAssetResolver(), new TestLanguage('de'), $container->get(ILevelRepository::class), $security, new TestLinkTargetService());
+$display = new GameDisplay(new TestView(), new TestAssetResolver(), new TestLanguage('de'), $container->get(ILevelRepository::class), $security, new TestLinkTargetService(), $container->get(\Base3\Authorization\Api\IAuthorizationService::class));
 check($display instanceof IDisplay && $display instanceof IHelp && $display instanceof ISchemaProvider, 'Display matches all three exact framework contracts');
 check($display::getName() === 'pulsecoredisplay', 'Existing display name unchanged');
 $display->setData([]);
@@ -182,11 +182,15 @@ $de = parse_ini_file(dirname(__DIR__) . '/lang/Game/de.ini', true, INI_SCANNER_R
 $en = parse_ini_file(dirname(__DIR__) . '/lang/Game/en.ini', true, INI_SCANNER_RAW)['pulsecore'];
 check(array_keys($de) === array_keys($en), 'German and English have matching localization keys');
 
-$api = static function(array $body, array $server = ['REQUEST_METHOD' => 'POST']) use ($security, $game, $logger): array {
-	$result = (new GameApiOutput(new TestRequest($body, $server), $security, $game, $logger))->getOutput('json');
+$api = static function(array $body, array $server = ['REQUEST_METHOD' => 'POST']) use ($security, $game, $logger, $authorization): array {
+	$result = (new GameApiOutput(new TestRequest($body, $server), $security, $game, $logger, $authorization))->getOutput('json');
 	return json_decode($result, true, 64, JSON_THROW_ON_ERROR);
 };
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1])['ok'], 'API accepts authenticated JSON request');
+$authorization->allowed = false;
+check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1])['error'] === 'permission_denied' && http_response_code() === 403, 'Feature revocation denies the API independently of session CSRF');
+check(str_contains($display->getOutput(), 'access denied'), 'Feature revocation denies embedded display rendering');
+$authorization->allowed = true;
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1], ['REQUEST_METHOD' => 'GET'])['error'] === 'invalid_request' && http_response_code() === 405, 'API rejects state requests via GET');
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1, 'userId' => 2])['error'] === 'invalid_request', 'API does not accept a browser-chosen user');
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1, 'score' => 999999])['error'] === 'invalid_request', 'API does not accept a browser-chosen score');
