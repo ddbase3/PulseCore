@@ -2,8 +2,6 @@
 
 // Test composition only. Never included by production src/ or tpl/.
 use Base3\Accesscontrol\Api\IAccesscontrol;
-use Base3\Authorization\Api\IAuthorizationService;
-use PulseCore\Test\Support\TestAuthorizationService;
 use Base3\Api\IContainer;
 use Base3\Database\Api\IDatabase;
 use Base3\Event\Api\IEventManager;
@@ -27,12 +25,11 @@ $database = new TestDatabase($filename);
 $identity = new TestAccesscontrol($session->get('test_user', 1));
 $events = new TestEventManager();
 $logger = new TestLogger();
-$authorization = new TestAuthorizationService();
 $container = new TestContainer();
-foreach ([IDatabase::class => $database, ISession::class => $session, IAccesscontrol::class => $identity, IEventManager::class => $events, ILogger::class => $logger, IAuthorizationService::class => $authorization] as $interface => $service) {
+foreach ([IDatabase::class => $database, ISession::class => $session, IAccesscontrol::class => $identity, IEventManager::class => $events, ILogger::class => $logger] as $interface => $service) {
 	$container->set($interface, $service, IContainer::SHARED);
 }
 (new PulseCore($container))->init();
 (new Migration001CreateGameTables($database))->up();
 (new Migration002AtomicSnapshots($database))->up();
-return compact('container', 'database', 'identity', 'session', 'logger', 'events', 'authorization');
+return compact('container', 'database', 'identity', 'session', 'logger', 'events');

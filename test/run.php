@@ -81,7 +81,7 @@ $user = $security->userKey();
 $token = $security->token();
 $levels = $container->get(ILevelRepository::class)->getLevels();
 $sectors = $container->get(ILevelRepository::class)->getSectors();
-check(!$container->has(IMigrationRunner::class), 'Feature plugin does not replace the project migration runner');
+check(!$container->has(IMigrationRunner::class), 'PulseCore does not replace the project migration runner');
 check((new GameMigrationProvider($container))->isActive(), 'Migration provider follows the active database repository');
 (new Migration001CreateGameTables($database))->up();
 (new Migration002AtomicSnapshots($database))->up();
@@ -165,7 +165,7 @@ $obsolete = $modifiedGame->load($user, 1);
 check($obsolete['rulesChanged'] && $obsolete['run'] === null, 'Changed rules do not silently resume an old snapshot');
 rejected(fn() => $modifiedGame->checkpoint($user, $state['revision'], $state['run']['id'], [['type' => 'reset']]), 'rules_changed', 'Rule version checked on every checkpoint');
 
-$display = new GameDisplay(new TestView(), new TestAssetResolver(), new TestLanguage('de'), $container->get(ILevelRepository::class), $security, new TestLinkTargetService(), $container->get(\Base3\Authorization\Api\IAuthorizationService::class));
+$display = new GameDisplay(new TestView(), new TestAssetResolver(), new TestLanguage('de'), $container->get(ILevelRepository::class), $security, new TestLinkTargetService());
 check($display instanceof IDisplay && $display instanceof IHelp && $display instanceof ISchemaProvider, 'Display matches all three exact framework contracts');
 check($display::getName() === 'pulsecoredisplay', 'Existing display name unchanged');
 $display->setData([]);
@@ -182,15 +182,11 @@ $de = parse_ini_file(dirname(__DIR__) . '/lang/Game/de.ini', true, INI_SCANNER_R
 $en = parse_ini_file(dirname(__DIR__) . '/lang/Game/en.ini', true, INI_SCANNER_RAW)['pulsecore'];
 check(array_keys($de) === array_keys($en), 'German and English have matching localization keys');
 
-$api = static function(array $body, array $server = ['REQUEST_METHOD' => 'POST']) use ($security, $game, $logger, $authorization): array {
-	$result = (new GameApiOutput(new TestRequest($body, $server), $security, $game, $logger, $authorization))->getOutput('json');
+$api = static function(array $body, array $server = ['REQUEST_METHOD' => 'POST']) use ($security, $game, $logger): array {
+	$result = (new GameApiOutput(new TestRequest($body, $server), $security, $game, $logger))->getOutput('json');
 	return json_decode($result, true, 64, JSON_THROW_ON_ERROR);
 };
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1])['ok'], 'API accepts authenticated JSON request');
-$authorization->allowed = false;
-check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1])['error'] === 'permission_denied' && http_response_code() === 403, 'Feature revocation denies the API independently of session CSRF');
-check(str_contains($display->getOutput(), 'access denied'), 'Feature revocation denies embedded display rendering');
-$authorization->allowed = true;
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1], ['REQUEST_METHOD' => 'GET'])['error'] === 'invalid_request' && http_response_code() === 405, 'API rejects state requests via GET');
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1, 'userId' => 2])['error'] === 'invalid_request', 'API does not accept a browser-chosen user');
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1, 'score' => 999999])['error'] === 'invalid_request', 'API does not accept a browser-chosen score');
@@ -198,6 +194,10 @@ check($api(['operation' => 'load', 'csrf' => 'bad', 'initialLevel' => 1])['error
 check($api(['operation' => 'select', 'csrf' => $token, 'revision' => '1', 'levelId' => 1])['error'] === 'invalid_request', 'API requires typed revision integers');
 $identity->userId = null;
 check($api(['operation' => 'load', 'csrf' => $token, 'initialLevel' => 1])['error'] === 'authentication_required', 'Logout invalidates access despite the old token');
+$anonymousDisplay = $display->getOutput();
+check(http_response_code() === 401 && str_contains($anonymousDisplay, $de['sync_authentication_required']), 'Anonymous embedded display shows translated sign-in guidance');
+$englishDisplay = new GameDisplay(new TestView(), new TestAssetResolver(), new TestLanguage('en'), $container->get(ILevelRepository::class), $security, new TestLinkTargetService());
+check(str_contains($englishDisplay->getOutput(), $en['sync_authentication_required']), 'Anonymous English display shows translated sign-in guidance');
 $identity->userId = 2;
 rejected(fn() => $security->authorize($token), 'session_expired', 'Token bound to the authenticated account');
 check($security->token() !== $token, 'New account receives a different token in the same host session');

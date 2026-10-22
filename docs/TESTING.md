@@ -29,7 +29,8 @@ MySQL/MariaDB syntax, locking, collation or deployment compatibility.
 The suite covers interface compatibility, plugin composition, migrations,
 identity/CSRF, owner separation, revision conflicts, snapshots, all 48 wins,
 duplicate delivery, best results, post-commit events, rule-version changes,
-strict API validation and real PHP template rendering.
+strict API validation, translated anonymous display rejection and real PHP
+template rendering.
 
 ## Deterministic rules and PHP/JavaScript parity
 

@@ -17,6 +17,6 @@ use PulseCore\Test\Support\TestView;
 $services = require __DIR__ . '/Support/services.php';
 $container = $services['container'];
 $language = new TestLanguage(($argv[1] ?? '') === 'en' ? 'en' : 'de');
-$display = new GameDisplay(new TestView(), new TestAssetResolver(), $language, $container->get(ILevelRepository::class), $container->get(GameSession::class), new TestLinkTargetService(), $container->get(\Base3\Authorization\Api\IAuthorizationService::class));
+$display = new GameDisplay(new TestView(), new TestAssetResolver(), $language, $container->get(ILevelRepository::class), $container->get(GameSession::class), new TestLinkTargetService());
 $display->setData(['level' => (int) ($argv[2] ?? 1)]);
 echo ($argv[3] ?? '') === 'fragment' ? $display->getOutput() : (new GameOutput(new TestClassMap($display), new TestView(), $language))->getOutput();

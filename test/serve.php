@@ -39,11 +39,11 @@ if (isset($_GET['testUser'])) {
 if (($_GET['name'] ?? '') === 'pulsecoreapi') {
 	$body = json_decode(file_get_contents('php://input'), true);
 	$request = new TestRequest(is_array($body) ? $body : [], $_SERVER);
-	echo (new GameApiOutput($request, $container->get(GameSession::class), $container->get(IGameService::class), $logger, $container->get(\Base3\Authorization\Api\IAuthorizationService::class)))->getOutput('json', true);
+	echo (new GameApiOutput($request, $container->get(GameSession::class), $container->get(IGameService::class), $logger))->getOutput('json', true);
 	exit;
 }
 $language = new TestLanguage(($_GET['lang'] ?? '') === 'en' ? 'en' : 'de');
-$display = new GameDisplay(new TestView(), new TestAssetResolver(), $language, $container->get(ILevelRepository::class), $container->get(GameSession::class), new TestLinkTargetService(), $container->get(\Base3\Authorization\Api\IAuthorizationService::class));
+$display = new GameDisplay(new TestView(), new TestAssetResolver(), $language, $container->get(ILevelRepository::class), $container->get(GameSession::class), new TestLinkTargetService());
 $display->setData(['level' => max(1, min(48, (int) ($_GET['level'] ?? 1)))]);
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store');

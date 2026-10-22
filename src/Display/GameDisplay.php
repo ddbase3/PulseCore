@@ -4,10 +4,6 @@ namespace PulseCore\Display;
 
 use Base3\Api\IAssetResolver;
 use Base3\Api\IDisplay;
-use Base3\Authorization\Api\IAuthorizationService;
-use Base3\Authorization\Dto\AuthorizationRequest;
-use Base3\Usermanager\Permission;
-use PulseCore\Feature\PulseCorePlayFeature;
 use Base3\Api\IHelp;
 use Base3\Api\IMvcView;
 use Base3\Api\ISchemaProvider;
@@ -16,6 +12,7 @@ use Base3\LinkTarget\Api\ILinkTargetService;
 use PulseCore\Service\GameSession;
 use InvalidArgumentException;
 use PulseCore\Api\ILevelRepository;
+use PulseCore\Exception\GameException;
 use RuntimeException;
 
 final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
@@ -28,8 +25,7 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 		private readonly ILanguage $language,
 		private readonly ILevelRepository $levels,
 		private readonly GameSession $session,
-		private readonly ILinkTargetService $links,
-		private readonly IAuthorizationService $authorization
+		private readonly ILinkTargetService $links
 	) {}
 
 	public static function getName(): string {
@@ -54,12 +50,6 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 		if ($out !== 'html') {
 			throw new InvalidArgumentException('PulseCore display supports html only.');
 		}
-		if (!$this->authorization->decide(new AuthorizationRequest(
-			$this->authorization->getDefaultAuthority(), Permission::for('feature', PulseCorePlayFeature::getName())
-		))->isAllowed()) {
-			http_response_code(403);
-			return '<p role="alert">PulseCore access denied.</p>';
-		}
 		$levels = $this->levels->getLevels();
 		if (!in_array($this->initialLevel, array_column($levels, 'id'), true)) {
 			throw new InvalidArgumentException('Unknown PulseCore level.');
@@ -72,6 +62,13 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 		$strings = $this->view->getBricks('pulsecore');
 		if ($strings === null) {
 			throw new RuntimeException('PulseCore language bricks are missing.');
+		}
+		try {
+			$csrf = $this->session->token();
+		} catch (GameException $error) {
+			if ($error->errorCode !== 'authentication_required') throw $error;
+			http_response_code($error->httpStatus);
+			return '<p role="alert">' . htmlspecialchars($strings['sync_authentication_required'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
 		}
 		$assets = [];
 		foreach ([
@@ -100,7 +97,7 @@ final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {
 		$this->view->assign('pulsecore_config', [
 			'engineVersion' => 1,
 			'apiUrl' => $this->links->getLink(['name' => 'pulsecoreapi', 'out' => 'json']),
-			'csrf' => $this->session->token(),
+			'csrf' => $csrf,
 			'language' => $language,
 			'initialLevel' => $this->initialLevel,
 			'levels' => $levels,

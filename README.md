@@ -212,7 +212,7 @@ Pinch-Zoom bleiben Browsergesten. Auf kleinen Feldern helfen die mindestens
 
 Fuer LIVE-Module stehen dort eigene Direkt-Tasten mit Feldkoordinate und
 aktueller Richtung bereit. Die Tasten arbeiten ueber denselben Spielkern und
-dieselben servergeprueften Aktionen wie das Modul. Sie sind vor dem Start, bei
+dieselben servergeprüften Aktionen wie das Modul. Sie sind vor dem Start, bei
 Pause, bei einer Speichersperre und nach Abschluss deaktiviert. Maus,
 Rechtsklick, Shift-Klick und Tastatur bleiben unterstuetzt.
 
@@ -226,16 +226,16 @@ neu gezeichnet.
 
 Pruefstand und Grenzen stehen in `docs/FINISHING-TESTS.md`.
 
-## BASE3 feature authorization (ILIAS 11 integration)
+## Anmeldung und Spiel-API
 
-`PulseCorePlayFeature` is discoverable through `IClassMap` as an `IFeature`.
-It declares `feature/pulsecoreplayfeature`; its default audience expression matches
-the BASE3 group `authenticated`. The ILIAS-hosted Features UI may override that
-with any combination of BASE3 groups, individual ILIAS users or discovered
-`IUserCriterion` expressions (for example an email-domain criterion). An explicit
-empty expression denies access. Both `pulsecoredisplay` and `pulsecoreapi` require
-`IAuthorizationService::decide()` to return `ALLOW`; server-side operations are
-protected independently of the UI. Feature rules are persisted only by the host in
-`base3_authorization_features/catalog` after the one-time migration from legacy
-`grants` to `rules`; PulseCore has no separate authorization table.
-See `PRIVACY.md` for host-specific data-processing and retention boundaries.
+PulseCore setzt einen angemeldeten Benutzer des Hostsystems voraus.
+`GameSession` ermittelt die vertrauenswürdige Benutzeridentität und stellt
+ein konto- und sitzungsgebundenes CSRF-Token bereit. `pulsecoredisplay`
+prüft die Anmeldung vor dem Rendern. `pulsecoreapi` prüft sie bei jeder
+Anfrage erneut und akzeptiert zustandsbezogene Aufrufe ausschließlich als
+JSON-POST mit gültigem CSRF-Token.
+
+Wo das Spiel angezeigt oder eingebettet werden darf, bestimmt das Hostsystem.
+Das Plugin führt keine zusätzlichen Zielgruppen- oder Freigaberegeln.
+Details zu personenbezogenen Daten, Aufbewahrung und Löschung stehen in
+`PRIVACY.md`.

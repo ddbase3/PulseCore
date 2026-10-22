@@ -16,30 +16,35 @@ replace the privacy notice, retention policy or legal assessment of the deployin
   user key. It is renewed on identity change and checked on every state API request.
   Game progress is not stored in the session. Session lifetime and cookie behavior are
   determined by the embedding host.
-- The discoverable `PulseCorePlayFeature` authorizes `feature/pulsecoreplayfeature`.
-  The display and JSON API both call `IAuthorizationService`. Under the ILIAS integration,
-  an optional audience expression is stored by the host in the single
-  `base3_authorization_features/catalog` dataset (after migration to `rules`).
-  In addition to BASE3 group names, a rule may include native ILIAS user IDs and
-  configured criterion attributes, such as the domain `qualitus.de`. PulseCore
-  does not write these rules itself and has no separate permission database.
+- `GameDisplay` validates the host identity through `GameSession` before rendering.
+  `GameApiOutput` validates it on every state API request and requires the
+  session-bound CSRF token. PulseCore does not maintain additional game access
+  rules or a separate permission database.
 - `GameApiOutput` logs rejected invalid requests and backend errors through the injected
   `ILogger`. Which log backend, log data, and retention apply depends on the host.
 
 ## Access, retention, deletion and recipients
 
-The game requires a valid host identity and explicit feature permission; server-side
-state writes additionally require a session-bound CSRF token. The authoritative game
-repository uses the host-provided `IDatabase`. Deletion and backup handling for
-`pulsecore_snapshots`, session expiry, log retention, database access and any external
-recipients or cross-border transfers depend on the actual deployment. The reviewed code
-does not itself establish automatic snapshot expiry, user-initiated deletion or a fixed
-retention period. Operators must define these and support applicable data-subject rights.
+The game requires a valid host identity; the host decides where its display can
+be reached and embedded. Server-side game operations additionally require a
+session-bound CSRF token. The authoritative game repository uses the
+host-provided `IDatabase`. Deletion and backup handling for `pulsecore_snapshots`,
+session expiry, log retention, database access and any external recipients or
+cross-border transfers depend on the actual deployment. The reviewed code does
+not itself establish automatic snapshot expiry, user-initiated deletion or a
+fixed retention period. Operators must define these and support applicable
+data-subject rights.
+
+Previously saved host-managed access settings, if present, are external to
+PulseCore and are not deleted when the plugin's code is updated.
 
 ## Security and documented gaps
 
-Requests use POST/JSON, refuse invalid fields, and are authenticated and authorized at
-operation time. Authorization grants are read via the host contract, not duplicated.
+Game API requests use POST/JSON, reject invalid fields, and check the trusted host
+identity and session-bound CSRF token at operation time. The display also checks
+identity before rendering. Any access restrictions on the embedding host page
+remain the host's responsibility.
+
 The source alone cannot establish the security of the deployment's infrastructure,
 encryption, backups, audit logging or GDPR compliance. Those remain deployment-specific
 verification requirements. The product UI must be tested against the BASE3 WCAG 2.2 AA
