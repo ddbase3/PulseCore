@@ -32,6 +32,9 @@ use PulseCore\Test\Support\TestLinkTargetService;
 use PulseCore\Test\Support\TestRequest;
 use PulseCore\Test\Support\TestView;
 
+
+require_once __DIR__ . '/runFixture1.php';
+require_once __DIR__ . '/runFixture2.php';
 $checks = [];
 function check(bool $test, string $message): void {
 	global $checks;
@@ -146,20 +149,12 @@ $extended = $levels;
 $extended[] = array_merge($levels[0], ['id' => 49]);
 $extendedSectors = $sectors;
 $extendedSectors[count($extendedSectors) - 1]['levelIds'][] = 49;
-$extendedRepository = new class($extended, $extendedSectors) implements ILevelRepository {
-	public function __construct(private array $levels, private array $sectors) {}
-	public function getLevels(): array { return $this->levels; }
-	public function getSectors(): array { return $this->sectors; }
-};
+$extendedRepository = new runFixture2($extended, $extendedSectors);
 $extendedGame = new GameService($repository, $extendedRepository, $events, $logger, new CampaignProgress($extendedRepository));
 check(!$extendedGame->load($user, 1)['complete'], 'Adding a level reopens campaign completion without erasing old progress');
 $modified = $levels;
 $modified[0]['goldTurns']++;
-$modifiedRepository = new class($modified, $sectors) implements ILevelRepository {
-	public function __construct(private array $levels, private array $sectors) {}
-	public function getLevels(): array { return $this->levels; }
-	public function getSectors(): array { return $this->sectors; }
-};
+$modifiedRepository = new runFixture1($modified, $sectors);
 $modifiedGame = new GameService($repository, $modifiedRepository, $events, $logger, new CampaignProgress($modifiedRepository));
 $obsolete = $modifiedGame->load($user, 1);
 check($obsolete['rulesChanged'] && $obsolete['run'] === null, 'Changed rules do not silently resume an old snapshot');
