@@ -49,3 +49,7 @@ The source alone cannot establish the security of the deployment's infrastructur
 encryption, backups, audit logging or GDPR compliance. Those remain deployment-specific
 verification requirements. The product UI must be tested against the BASE3 WCAG 2.2 AA
 baseline, including embedded host focus behavior and keyboard operation.
+
+### Settings integration (November 2026)
+
+The settings tab grants navigation visibility only; game sessions and persisted progress continue to be subject to the existing gameplay rules.

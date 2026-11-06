@@ -239,3 +239,8 @@ Wo das Spiel angezeigt oder eingebettet werden darf, bestimmt das Hostsystem.
 Das Plugin führt keine zusätzlichen Zielgruppen- oder Freigaberegeln.
 Details zu personenbezogenen Daten, Aufbewahrung und Löschung stehen in
 `PRIVACY.md`.
+
+
+## Games settings
+
+`PulsecoreSettingsTab` contributes the existing `pulsecoredisplay` under the common ClientStack Games group. The tab itself is feature-controlled. The existing PulseCore game API still enforces authenticated session and CSRF-based gameplay rules independently of navigation; saved progress, migrations, and capacity are not modified.
