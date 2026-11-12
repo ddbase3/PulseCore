@@ -4,10 +4,12 @@ namespace PulseCore\Migration;
 
 use Base3\Database\Api\IDatabase;
 use Base3\Migration\Api\IDatabaseMigration;
+use Base3\Migration\Api\ILegacyDatabaseMigration;
+use Base3\Migration\Exception\MigrationException;
 use RuntimeException;
 
 /** Copies the existing three-table game state into a single atomic per-user snapshot. */
-final class Migration002AtomicSnapshots implements IDatabaseMigration {
+final class Migration002AtomicSnapshots implements IDatabaseMigration, ILegacyDatabaseMigration {
 
 	public function __construct(private readonly IDatabase $database) {}
 
@@ -85,5 +87,9 @@ final class Migration002AtomicSnapshots implements IDatabaseMigration {
 		if ($this->database->isError()) {
 			throw new RuntimeException('PulseCore snapshot migration failed (' . $this->database->errorNumber() . '): ' . $this->database->errorMessage());
 		}
+	}
+
+	public function down(): void {
+		throw new MigrationException('Not implemented');
 	}
 }

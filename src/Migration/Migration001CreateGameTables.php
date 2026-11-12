@@ -4,9 +4,11 @@ namespace PulseCore\Migration;
 
 use Base3\Database\Api\IDatabase;
 use Base3\Migration\Api\IDatabaseMigration;
+use Base3\Migration\Api\ILegacyDatabaseMigration;
+use Base3\Migration\Exception\MigrationException;
 use RuntimeException;
 
-final class Migration001CreateGameTables implements IDatabaseMigration {
+final class Migration001CreateGameTables implements IDatabaseMigration, ILegacyDatabaseMigration {
 
 	public function __construct(private readonly IDatabase $database) {}
 
@@ -48,5 +50,9 @@ final class Migration001CreateGameTables implements IDatabaseMigration {
 			$this->database->nonQuery($sql);
 			if ($this->database->isError()) throw new RuntimeException('PulseCore schema migration failed: ' . $this->database->errorMessage());
 		}
+	}
+
+	public function down(): void {
+		throw new MigrationException('Not implemented');
 	}
 }
