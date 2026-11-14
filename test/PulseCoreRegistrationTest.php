@@ -1,24 +1,38 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Test;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Accesscontrol\Api\IAccesscontrol;
-use Base3\Api\IContainer;
-use Base3\Database\Api\IDatabase;
-use Base3\Event\Api\IEventManager;
-use Base3\Logger\Api\ILogger;
-use Base3\Session\Api\ISession;
+namespace Base3\PulseCore\Test;
+
+use Base3\CoreFoundation\Accesscontrol\Api\IAccesscontrol;
+use Base3\CoreFoundation\Api\IContainer;
+use Base3\CoreFoundation\Database\Api\IDatabase;
+use Base3\CoreFoundation\Event\Api\IEventManager;
+use Base3\CoreFoundation\Logger\Api\ILogger;
+use Base3\CoreFoundation\Session\Api\ISession;
 use PHPUnit\Framework\TestCase;
-use PulseCore\Api\IGameRepository;
-use PulseCore\Api\IGameService;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Level\CampaignLevelRepository;
-use PulseCore\PulseCore;
-use PulseCore\Repository\DatabaseGameRepository;
-use PulseCore\Service\CampaignProgress;
-use PulseCore\Service\GameService;
-use PulseCore\Service\GameSession;
-use PulseCore\Test\Support\TestContainer;
+use Base3\PulseCore\Api\IGameRepository;
+use Base3\PulseCore\Api\IGameService;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Level\CampaignLevelRepository;
+use Base3\PulseCore\PulseCore;
+use Base3\PulseCore\Repository\DatabaseGameRepository;
+use Base3\PulseCore\Service\CampaignProgress;
+use Base3\PulseCore\Service\GameService;
+use Base3\PulseCore\Service\GameSession;
+use Base3\PulseCore\Test\Support\TestContainer;
 
 require_once __DIR__ . '/Support/TestContainer.php';
 

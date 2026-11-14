@@ -17,18 +17,18 @@ if ($path === '/favicon.ico') { http_response_code(204); exit; }
 if ($path !== '/') { http_response_code(404); exit; }
 require __DIR__ . '/Support/bootstrap.php';
 
-use PulseCore\Api\IGameService;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Display\GameDisplay;
-use PulseCore\Output\GameApiOutput;
-use PulseCore\Output\GameOutput;
-use PulseCore\Service\GameSession;
-use PulseCore\Test\Support\TestClassMap;
-use PulseCore\Test\Support\TestAssetResolver;
-use PulseCore\Test\Support\TestLanguage;
-use PulseCore\Test\Support\TestLinkTargetService;
-use PulseCore\Test\Support\TestRequest;
-use PulseCore\Test\Support\TestView;
+use Base3\PulseCore\Api\IGameService;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Display\GameDisplay;
+use Base3\PulseCore\Output\GameApiOutput;
+use Base3\PulseCore\Output\GameOutput;
+use Base3\PulseCore\Service\GameSession;
+use Base3\PulseCore\Test\Support\TestClassMap;
+use Base3\PulseCore\Test\Support\TestAssetResolver;
+use Base3\PulseCore\Test\Support\TestLanguage;
+use Base3\PulseCore\Test\Support\TestLinkTargetService;
+use Base3\PulseCore\Test\Support\TestRequest;
+use Base3\PulseCore\Test\Support\TestView;
 
 $services = require __DIR__ . '/Support/services.php';
 extract($services, EXTR_SKIP);

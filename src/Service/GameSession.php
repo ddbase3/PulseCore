@@ -1,10 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Service;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Accesscontrol\Api\IAccesscontrol;
-use Base3\Session\Api\ISession;
-use PulseCore\Exception\GameException;
+namespace Base3\PulseCore\Service;
+
+use Base3\CoreFoundation\Accesscontrol\Api\IAccesscontrol;
+use Base3\CoreFoundation\Session\Api\ISession;
+use Base3\PulseCore\Exception\GameException;
 
 /** Authentication and CSRF boundary; no game progress is stored in the session. */
 final class GameSession {

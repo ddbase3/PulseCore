@@ -1,29 +1,45 @@
 <?php declare(strict_types=1);
 
-use Base3\Api\IDisplay;
-use Base3\Api\IHelp;
-use Base3\Api\ISchemaProvider;
-use Base3\Migration\Api\IMigrationRunner;
-use PulseCore\Api\IGameRepository;
-use PulseCore\Api\IGameService;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Display\GameDisplay;
-use PulseCore\Engine\CircuitEngine;
-use PulseCore\Event\LevelCompletedEvent;
-use PulseCore\Exception\GameException;
-use PulseCore\Migration\GameMigrationProvider;
-use PulseCore\Migration\Migration001CreateGameTables;
-use PulseCore\Migration\Migration002AtomicSnapshots;
-use PulseCore\Output\GameApiOutput;
-use PulseCore\PulseCore;
-use PulseCore\Service\GameService;
-use PulseCore\Service\CampaignProgress;
-use PulseCore\Service\GameSession;
-use PulseCore\Test\Support\TestAssetResolver;
-use PulseCore\Test\Support\TestLanguage;
-use PulseCore\Test\Support\TestLinkTargetService;
-use PulseCore\Test\Support\TestRequest;
-use PulseCore\Test\Support\TestView;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
+
+namespace Base3\PulseCore\Test;
+
+use Base3\CoreFoundation\Api\IDisplay;
+use Base3\CoreFoundation\Api\IHelp;
+use Base3\CoreFoundation\Api\ISchemaProvider;
+use Base3\CoreFoundation\Migration\Api\IMigrationRunner;
+use Base3\PulseCore\Api\IGameRepository;
+use Base3\PulseCore\Api\IGameService;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Display\GameDisplay;
+use Base3\PulseCore\Engine\CircuitEngine;
+use Base3\PulseCore\Event\LevelCompletedEvent;
+use Base3\PulseCore\Exception\GameException;
+use Base3\PulseCore\Migration\GameMigrationProvider;
+use Base3\PulseCore\Migration\Migration001CreateGameTables;
+use Base3\PulseCore\Migration\Migration002AtomicSnapshots;
+use Base3\PulseCore\Output\GameApiOutput;
+use Base3\PulseCore\PulseCore;
+use Base3\PulseCore\Service\GameService;
+use Base3\PulseCore\Service\CampaignProgress;
+use Base3\PulseCore\Service\GameSession;
+use Base3\PulseCore\Test\Support\TestAssetResolver;
+use Base3\PulseCore\Test\Support\TestLanguage;
+use Base3\PulseCore\Test\Support\TestLinkTargetService;
+use Base3\PulseCore\Test\Support\TestRequest;
+use Base3\PulseCore\Test\Support\TestView;
 
 final class runFixture2 implements ILevelRepository {
 	public function __construct(private array $levels, private array $sectors) {}

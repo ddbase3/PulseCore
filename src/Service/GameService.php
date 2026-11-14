@@ -1,15 +1,29 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Service;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Event\Api\IEventManager;
-use Base3\Logger\Api\ILogger;
-use PulseCore\Api\IGameRepository;
-use PulseCore\Api\IGameService;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Engine\CircuitEngine;
-use PulseCore\Event\LevelCompletedEvent;
-use PulseCore\Exception\GameException;
+namespace Base3\PulseCore\Service;
+
+use Base3\CoreFoundation\Event\Api\IEventManager;
+use Base3\CoreFoundation\Logger\Api\ILogger;
+use Base3\PulseCore\Api\IGameRepository;
+use Base3\PulseCore\Api\IGameService;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Engine\CircuitEngine;
+use Base3\PulseCore\Event\LevelCompletedEvent;
+use Base3\PulseCore\Exception\GameException;
 use Throwable;
 
 final class GameService implements IGameService {

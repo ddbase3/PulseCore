@@ -1,11 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Migration;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Database\Api\IDatabase;
-use Base3\Migration\Api\IDatabaseMigration;
-use Base3\Migration\Api\ILegacyDatabaseMigration;
-use Base3\Migration\Exception\MigrationException;
+namespace Base3\PulseCore\Migration;
+
+use Base3\CoreFoundation\Database\Api\IDatabase;
+use Base3\CoreFoundation\Migration\Api\IDatabaseMigration;
+use Base3\CoreFoundation\Migration\Api\ILegacyDatabaseMigration;
+use Base3\CoreFoundation\Migration\Exception\MigrationException;
 use RuntimeException;
 
 /** Copies the existing three-table game state into a single atomic per-user snapshot. */

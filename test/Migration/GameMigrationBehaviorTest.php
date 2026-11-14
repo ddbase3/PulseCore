@@ -1,16 +1,30 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Test\Migration;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Api\IContainer;
-use Base3\Database\Api\IDatabase;
+namespace Base3\PulseCore\Test\Migration;
+
+use Base3\CoreFoundation\Api\IContainer;
+use Base3\CoreFoundation\Database\Api\IDatabase;
 use PHPUnit\Framework\TestCase;
-use PulseCore\Api\IGameRepository;
-use PulseCore\Migration\GameMigrationProvider;
-use PulseCore\Migration\Migration001CreateGameTables;
-use PulseCore\Migration\Migration002AtomicSnapshots;
-use PulseCore\Repository\DatabaseGameRepository;
-use PulseCore\Test\Support\TestContainer;
+use Base3\PulseCore\Api\IGameRepository;
+use Base3\PulseCore\Migration\GameMigrationProvider;
+use Base3\PulseCore\Migration\Migration001CreateGameTables;
+use Base3\PulseCore\Migration\Migration002AtomicSnapshots;
+use Base3\PulseCore\Repository\DatabaseGameRepository;
+use Base3\PulseCore\Test\Support\TestContainer;
 use RuntimeException;
 
 require_once dirname(__DIR__) . '/Support/TestContainer.php';

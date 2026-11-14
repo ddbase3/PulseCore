@@ -5,11 +5,11 @@ require __DIR__ . '/Support/bootstrap.php';
 putenv('PULSECORE_TEST_DB=:memory:');
 extract(require __DIR__ . '/Support/services.php', EXTR_SKIP);
 
-use PulseCore\Api\IGameService;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Engine\CircuitEngine;
-use PulseCore\Exception\GameException;
-use PulseCore\Level\CampaignLevelRepository;
+use Base3\PulseCore\Api\IGameService;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Engine\CircuitEngine;
+use Base3\PulseCore\Exception\GameException;
+use Base3\PulseCore\Level\CampaignLevelRepository;
 
 $checks = [];
 function check(bool $passed, string $label): void {

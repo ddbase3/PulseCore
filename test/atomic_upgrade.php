@@ -3,11 +3,11 @@
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 require __DIR__ . '/Support/bootstrap.php';
 
-use PulseCore\Exception\GameException;
-use PulseCore\Migration\Migration001CreateGameTables;
-use PulseCore\Migration\Migration002AtomicSnapshots;
-use PulseCore\Repository\DatabaseGameRepository;
-use PulseCore\Test\Support\TestDatabase;
+use Base3\PulseCore\Exception\GameException;
+use Base3\PulseCore\Migration\Migration001CreateGameTables;
+use Base3\PulseCore\Migration\Migration002AtomicSnapshots;
+use Base3\PulseCore\Repository\DatabaseGameRepository;
+use Base3\PulseCore\Test\Support\TestDatabase;
 
 $db = new TestDatabase(':memory:');
 (new Migration001CreateGameTables($db))->up();

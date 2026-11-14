@@ -1,21 +1,35 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Test\Display;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Accesscontrol\Api\IAccesscontrol;
-use Base3\Api\IMvcView;
-use Base3\Session\Api\ISession;
+namespace Base3\PulseCore\Test\Display;
+
+use Base3\CoreFoundation\Accesscontrol\Api\IAccesscontrol;
+use Base3\CoreFoundation\Api\IMvcView;
+use Base3\CoreFoundation\Session\Api\ISession;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
-use PulseCore\Display\GameDisplay;
-use PulseCore\Exception\GameException;
-use PulseCore\Level\CampaignLevelRepository;
-use PulseCore\Service\GameSession;
-use PulseCore\Test\Support\TestAssetResolver;
-use PulseCore\Test\Support\TestLanguage;
-use PulseCore\Test\Support\TestLinkTargetService;
-use PulseCore\Test\Support\TestView;
+use Base3\PulseCore\Display\GameDisplay;
+use Base3\PulseCore\Exception\GameException;
+use Base3\PulseCore\Level\CampaignLevelRepository;
+use Base3\PulseCore\Service\GameSession;
+use Base3\PulseCore\Test\Support\TestAssetResolver;
+use Base3\PulseCore\Test\Support\TestLanguage;
+use Base3\PulseCore\Test\Support\TestLinkTargetService;
+use Base3\PulseCore\Test\Support\TestView;
 use RuntimeException;
 
 require_once dirname(__DIR__) . '/Support/TestAssetResolver.php';
@@ -149,7 +163,7 @@ final class GameDisplayBoundaryTest extends TestCase {
 		}
 	}
 	public function testExistingAssetQueriesReceiveVersionUsingAmpersand(): void {
-		$assets = $this->createStub(\Base3\Api\IAssetResolver::class);
+		$assets = $this->createStub(\Base3\CoreFoundation\Api\IAssetResolver::class);
 		$assets->method('resolve')->willReturn('/assets/PulseCore/test?signature=fixed');
 		$display = new GameDisplay(
 			new TestView(), $assets, new TestLanguage('en'),

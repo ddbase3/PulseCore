@@ -1,18 +1,32 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Display;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Api\IAssetResolver;
-use Base3\Api\IDisplay;
-use Base3\Api\IHelp;
-use Base3\Api\IMvcView;
-use Base3\Api\ISchemaProvider;
-use Base3\Language\Api\ILanguage;
-use Base3\LinkTarget\Api\ILinkTargetService;
-use PulseCore\Service\GameSession;
+namespace Base3\PulseCore\Display;
+
+use Base3\CoreFoundation\Api\IAssetResolver;
+use Base3\CoreFoundation\Api\IDisplay;
+use Base3\CoreFoundation\Api\IHelp;
+use Base3\CoreFoundation\Api\IMvcView;
+use Base3\CoreFoundation\Api\ISchemaProvider;
+use Base3\CoreFoundation\Language\Api\ILanguage;
+use Base3\CoreFoundation\LinkTarget\Api\ILinkTargetService;
+use Base3\PulseCore\Service\GameSession;
 use InvalidArgumentException;
-use PulseCore\Api\ILevelRepository;
-use PulseCore\Exception\GameException;
+use Base3\PulseCore\Api\ILevelRepository;
+use Base3\PulseCore\Exception\GameException;
 use RuntimeException;
 
 final class GameDisplay implements IDisplay, IHelp, ISchemaProvider {

@@ -6,11 +6,10 @@ runtime fallback, installer or alternative storage architecture.
 
 ## PHP contracts, services and persistence
 
-Point `BASE3_API_DIR` at a matching framework source directory, including the
-API contracts from the supplied archive:
+Run against the installed BASE3 module set. The test harness uses the existing
+BASE3 bootstrap autoloader, not a separate test-specific namespace map:
 
 ```sh
-export BASE3_API_DIR=/path/to/Base3Framework/src
 php -d ffi.enable=1 test/run.php
 php -d ffi.enable=1 test/atomic_upgrade.php
 php -d ffi.enable=1 test/campaign.php
@@ -34,7 +33,7 @@ template rendering.
 
 ## Deterministic rules and PHP/JavaScript parity
 
-With Node.js 18 or newer, PHP and `BASE3_API_DIR` still configured:
+With Node.js 18 or newer and PHP available:
 
 ```sh
 npm test
@@ -60,7 +59,7 @@ python test/Browser/ajax_test.py
 
 By default, the scripts use `/usr/bin/chromium`. Set
 `PULSECORE_TEST_ARTIFACTS` to choose the screenshot/report directory. PHP FFI,
-libsqlite3 and `BASE3_API_DIR` are required for the disposable test server.
+libsqlite3 and the installed BASE3 bootstrap autoloader are required for the disposable test server.
 
 The harness launches a loopback PHP server with a temporary SQLite database.
 It renders the real display/templates and loads the shipped CSS/ES modules

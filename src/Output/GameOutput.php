@@ -1,13 +1,27 @@
 <?php declare(strict_types=1);
 
-namespace PulseCore\Output;
+/***********************************************************************
+ * This file is part of PulseCore for BASE3 Framework.
+ *
+ * PulseCore provides an account-based circuit puzzle for BASE3.
+ * It includes missions, progress tracking and verified game results.
+ * The interactive display uses existing BASE3 services and assets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * https://base3.de
+ **********************************************************************/
 
-use Base3\Api\IClassMap;
-use Base3\Api\IDisplay;
-use Base3\Api\IHelp;
-use Base3\Api\IMvcView;
-use Base3\Api\IOutput;
-use Base3\Language\Api\ILanguage;
+namespace Base3\PulseCore\Output;
+
+use Base3\CoreFoundation\Api\IClassMap;
+use Base3\CoreFoundation\Api\IDisplay;
+use Base3\CoreFoundation\Api\IHelp;
+use Base3\CoreFoundation\Api\IMvcView;
+use Base3\CoreFoundation\Api\IOutput;
+use Base3\CoreFoundation\Language\Api\ILanguage;
 use InvalidArgumentException;
 use RuntimeException;
 
